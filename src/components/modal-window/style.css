@@ -1,0 +1,31 @@
+.Modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100vh;
+  width: 100vw;
+
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.Modal-content {
+  position: relative;
+
+  width: object-fit;
+
+  padding-bottom: 90px;
+
+  background-color: #fff;
+}
+
+.Modal-closeButton {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+}
