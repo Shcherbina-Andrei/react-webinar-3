@@ -4,6 +4,7 @@ import './style.css';
 import ModalWindow from '../modal-window';
 import List from '../list';
 import Head from '../head';
+import { formatPrice } from '../../utils';
 
 function Basket({ basket, onDeleteItemFromBasket, onCloseBasket, totalPrice }) {
   return (
@@ -26,7 +27,7 @@ function Basket({ basket, onDeleteItemFromBasket, onCloseBasket, totalPrice }) {
                 <strong>Итого</strong>
               </span>
               <span>
-                <strong>{totalPrice} &#8381;</strong>
+                <strong>{formatPrice(totalPrice)} &#8381;</strong>
               </span>
             </div>
           </>

@@ -67,6 +67,8 @@ class Store {
       this.setState({
         ...this.state,
         basket: [...this.state.basket, addedItem],
+        totalPrice: this.state.totalPrice + position.price,
+        totalItems: this.state.totalItems + 1
       });
     } else {
       const changedItem = {...this.state.basket[itemPosition], count: this.state.basket[itemPosition].count + 1};
@@ -77,6 +79,7 @@ class Store {
           changedItem,
           ...this.state.basket.slice(itemPosition + 1),
         ],
+        totalPrice: this.state.totalPrice + position.price,
       });
     }
   }
@@ -102,6 +105,8 @@ class Store {
     this.setState({
       ...this.state,
       basket: this.state.basket.filter((item) => item.code !== position.code),
+      totalPrice: this.state.totalPrice - position.price * position.count,
+      totalItems: this.state.totalItems - 1
     });
   }
 

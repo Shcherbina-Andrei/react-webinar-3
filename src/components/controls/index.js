@@ -1,52 +1,39 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './style.css';
-import Basket from '../basket';
-import { plural } from '../../utils';
+import { formatPrice, plural } from '../../utils';
 
-function Controls({ basket, onDeleteItemFromBasket }) {
-  const [isModalActive, setIsActiveModal] = useState(false);
-
-  const totalPrice = basket.reduce(
-    (acc, item) => acc + item.price * item.count,
-    0
-  );
+function Controls({ totalPrice, totalItems, onOpenBasket }) {
+  
 
   return (
     <div className='Controls'>
       <span>В корзине:</span>
       <span>
-        {basket.length === 0 ? (
+        {totalItems === 0 ? (
           <strong>пусто</strong>
         ) : (
           <strong>
-            {basket.length}{' '}
-            {plural(basket.length, {
+            {totalItems}{' '}
+            {plural(totalItems, {
               zero: 'товаров',
               one: 'товар',
               few: 'товара',
               many: 'товаров',
             })}{' '}
-            / {totalPrice} &#8381;
+            / {formatPrice(totalPrice)} &#8381;
           </strong>
         )}
       </span>
-      <button onClick={() => setIsActiveModal(true)}>Перейти</button>
-      {isModalActive && (
-        <Basket
-          basket={basket}
-          onDeleteItemFromBasket={onDeleteItemFromBasket}
-          onCloseBasket={setIsActiveModal}
-          totalPrice={totalPrice}
-        />
-      )}
+      <button onClick={() => onOpenBasket(true)}>Перейти</button>
     </div>
   );
 }
 
 Controls.propTypes = {
-  basket: PropTypes.arrayOf(Object),
-  onDeleteItemFromBasket: PropTypes.func,
+  totalPrice: PropTypes.number,
+  totalItems: PropTypes.number,
+  onOpenBasket: PropTypes.func
 };
 
 export default React.memo(Controls);
