@@ -1,4 +1,5 @@
-import {memo, useCallback, useEffect, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo} from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Item from "../../components/item";
 import PageLayout from "../../components/page-layout";
 import Head from "../../components/head";
@@ -7,27 +8,36 @@ import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import Pagination from '../../components/pagination';
 import Navigation from '../../components/navigation';
+import Loader from '../../components/loader';
 
 function Main() {
 
   const store = useStore();
 
-  const [currentPaginationPage, setCurrentPaginationPage] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    store.actions.catalog.load();
+  }, []);
+
+  const onSetCurrentPaginationPage = (currentPaginationPage) => {
     store.actions.catalog.load(currentPaginationPage);
-  }, [currentPaginationPage]);
+  }
 
   const select = useSelector(state => ({
     list: state.catalog.list,
-    totalItems: state.catalog.totalItems,
+    totalPages: state.catalog.totalPages,
     amount: state.basket.amount,
-    sum: state.basket.sum
+    sum: state.basket.sum,
+    currentPage: state.catalog.currentPage,
+    isLoading: state.catalog.isLoading
   }));
 
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
+    openModalBasket: useCallback(() => navigate('/basket', {state : {background: location} })),
   }
 
   const renders = {
@@ -40,10 +50,12 @@ function Main() {
     <PageLayout>
       <Head title='Магазин'/>
       <div>
-        <Navigation />
-        <List list={select.list} renderItem={renders.item}/>
+        <Navigation amount={select.amount} sum={select.sum} onOpenBasket={callbacks.openModalBasket} />
+        {select.isLoading ? <Loader /> : <List list={select.list} renderItem={renders.item}/>}
       </div>
-      <Pagination totalItems={select.totalItems} currentPage={currentPaginationPage} setCurrentPage={setCurrentPaginationPage} />
+      {select.totalPages > 1
+      && 
+      <Pagination totalPages={select.totalPages} currentPage={select.currentPage} setCurrentPage={onSetCurrentPaginationPage} />}
     </PageLayout>
 
   );

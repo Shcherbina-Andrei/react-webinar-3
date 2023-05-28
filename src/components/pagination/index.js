@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
-import { useMemo } from 'react';
 import { getPages } from '../../utils';
 import './style.css';
 
-function Pagination({ totalItems, pageLimit = 10, currentPage, setCurrentPage }) {
-  const totalPages = useMemo(() => Math.round(totalItems / pageLimit));
+function Pagination({ totalPages, currentPage, setCurrentPage }) {
   const pages = getPages(currentPage, totalPages);
 
   return (
@@ -48,9 +46,8 @@ function Pagination({ totalItems, pageLimit = 10, currentPage, setCurrentPage })
 }
 
 Pagination.propTypes = {
-  totalItems: PropTypes.number,
+  totalPages: PropTypes.number,
   currentPage: PropTypes.number,
-  pageLimit: PropTypes.number,
   setCurrentPage: PropTypes.func,
 };
 

@@ -1,56 +1,51 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/page-layout';
 import { useCallback, useEffect } from 'react';
 import Head from "../../components/head";
 import useStore from '../../store/use-store';
 import useSelector from '../../store/use-selector';
 import Navigation from '../../components/navigation';
-import './style.css';
-import { numberFormat } from '../../utils';
+import ProductCard from '../../components/product-card';
+import Loader from '../../components/loader';
 
 function ProductPage() {
   const { id } = useParams();
   const store = useStore();
+
+  const navigate = useNavigate();
+  const location = useLocation();
   
   const select = useSelector(state => ({
-    currentItem: state.catalog.currentProduct
+    currentItem: state.catalog.currentProduct,
+    amount: state.basket.amount,
+    sum: state.basket.sum,
+    isLoading: state.catalog.isLoading
   }));
+
+  const callbacks = {
+    // Добавление в корзину
+    addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
+    openModalBasket: useCallback(() => navigate('/basket', {state : {background: location} })),
+  }
 
   
   useEffect(() => {
     store.actions.catalog.loadCurrentProduct(id);
   }, [id])
   
-  if (!select.currentItem) {
-    return <p>loading...</p>
+  if (!select.currentItem || select.isLoading) {
+    return (
+      <PageLayout>
+        <Loader />
+      </PageLayout>
+    )
   }
-
-  const addToBasket = _id => store.actions.basket.addToBasket(_id);
 
   return (
     <PageLayout>
       <Head title={select.currentItem.title} />
-      <div>
-        <Navigation />
-      </div>
-      <div className='Product'>
-        <p className='Product-field'>
-          {select.currentItem.description}
-        </p>
-        <p className='Product-field'>
-          Страна производитель: <span className='Product-cell'>{select.currentItem.madeIn.title}</span>
-        </p>
-        <p className='Product-field'>
-          Категория: <span className='Product-cell'>{select.currentItem.category.title}</span>
-        </p>
-        <p className='Product-field'>
-          Год выпуска:  <span className='Product-cell'>{select.currentItem.edition}</span>
-        </p>
-        <p className='Product-field Product-field_price'>
-          <span className='Product-cell'>Цены: {numberFormat(select.currentItem.price)} ₽</span>
-        </p>
-        <button onClick={() => addToBasket(select.currentItem._id)}>Добавить</button>
-      </div>
+      <Navigation amount={select.amount} sum={select.sum} onOpenBasket={callbacks.openModalBasket} />
+      <ProductCard product={select.currentItem} onAddBasket={callbacks.addToBasket} />
     </PageLayout>
   )
 }
