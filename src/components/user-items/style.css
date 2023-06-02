@@ -1,0 +1,9 @@
+.UserItems {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 24px
+}
+
+.UserItems-ProfileLink {
+  margin-right: 23px;
+}
