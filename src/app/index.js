@@ -12,7 +12,17 @@ import Profile from './profile';
  */
 function App() {
 
+  const authStatus = useSelector(state => state.user.authStatus);
+
   const activeModal = useSelector(state => state.modals.name);
+
+  if (authStatus === 'Unknown') {
+    return (
+      <div>
+        Loading...
+      </div>
+    )
+  }
 
   return (
     <>

@@ -1,12 +1,13 @@
+import PropTypes from 'prop-types';
 import './style.css';
 
-function LoginForm({userData, setUserData, onSubmit}) {
+function LoginForm({userData, setUserData, onSubmit, error, t}) {
   
   return (
     <form className='LoginForm' onSubmit={onSubmit}>
-        <h2 className='LoginForm-title'>Вход</h2>
+        <h2 className='LoginForm-title'>{t('auth.entry')}</h2>
         <label className='LoginForm-label'>
-          Логин
+          {t('auth.login')}
           <input type='text'
             value={userData.login}
             onChange={(e) => setUserData({...userData, login: e.target.value})} 
@@ -14,16 +15,31 @@ function LoginForm({userData, setUserData, onSubmit}) {
           />
         </label>
         <label className='LoginForm-label'>
-          Пароль
+          {t('auth.password')}
           <input type='password'
             value={userData.password}
             onChange={(e) => setUserData({...userData, password: e.target.value})} 
             required
           />
         </label>
-        <button type='submit'>Войти</button>
+        <button type='submit'>{t('auth.signIn')}</button>
+        {error.isError && <p className='LoginForm-error'>{error.message}</p>}
       </form>
   );
+}
+
+LoginForm.propTypes = {
+  userData: PropTypes.shape({
+    login: PropTypes.string,
+    password: PropTypes.string
+  }),
+  setUserData: PropTypes.func,
+  onSubmit: PropTypes.func,
+  error: PropTypes.shape({
+    message: PropTypes.string,
+    isError: PropTypes.bool
+  }),
+  t: PropTypes.func
 }
 
 export default LoginForm;
