@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import './style.css';
 
 function ProfileCard({userInfo, t}) {
-
   return (
     <div className='ProfileCard'>
       <h2 className='ProfileCard-title'>{t('profile.title')}</h2>

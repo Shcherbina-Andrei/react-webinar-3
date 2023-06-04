@@ -7,12 +7,24 @@ import Navigation from '../../containers/navigation';
 import UserControls from '../../containers/user-controls';
 import useSelector from '../../hooks/use-selector';
 import useTranslate from '../../hooks/use-translate';
+import useInit from '../../hooks/use-init';
+import useStore from '../../hooks/use-store';
 
 function Profile() {
+  const store = useStore();
+
+  useInit( async () => {
+    await store.actions.profile.load();
+  });
+
   const select = useSelector(state => ({
-    user: state.user
+    user: state.user,
+    profile: state.profile.profileData,
+    waiting: state.profile.profileWaiting
   }));
+  
   const {t} = useTranslate();
+
   if (select.user.authStatus !== 'Auth') {
     return (
       <Navigate to='/login' />
@@ -26,7 +38,9 @@ function Profile() {
         <LocaleSelect />
       </Head>
       <Navigation />
-      <ProfileCard userInfo={select.user.userInfo} t={t}  />
+      {
+        !select.waiting && <ProfileCard userInfo={select.profile} t={t} />
+      }
     </PageLayout>
   );
 }

@@ -22,8 +22,8 @@ function LoginForm({userData, setUserData, onSubmit, error, t}) {
             required
           />
         </label>
-        <button type='submit'>{t('auth.signIn')}</button>
         {error.isError && <p className='LoginForm-error'>{error.message}</p>}
+        <button type='submit'>{t('auth.signIn')}</button>
       </form>
   );
 }
