@@ -13,23 +13,16 @@ import useStore from '../../hooks/use-store';
 function Profile() {
   const store = useStore();
 
-  useInit( async () => {
-    await store.actions.profile.load();
+  useInit(() => {
+    store.actions.profile.load();
   });
 
   const select = useSelector(state => ({
-    user: state.user,
     profile: state.profile.profileData,
     waiting: state.profile.profileWaiting
   }));
   
   const {t} = useTranslate();
-
-  if (select.user.authStatus !== 'Auth') {
-    return (
-      <Navigate to='/login' />
-    )
-  }
 
   return (
     <PageLayout>

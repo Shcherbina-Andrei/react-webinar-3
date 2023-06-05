@@ -7,8 +7,6 @@ import Store from "./store";
 
 const store = new Store();
 
-store.actions.user.checkAuth();
-
 const root = createRoot(document.getElementById('root'));
 
 // Первый рендер приложения
